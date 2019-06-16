@@ -80,7 +80,7 @@
         </div>
 
         <form action="/" method="post">
-            <input type="checkbox" value="" style="visibility:hidden" class="radio" name="answer" checked/></label>
+            <input type="checkbox" id="emptyInput" value="" style="visibility:hidden" class="radio" name="answer" checked/></label>
             <div class="col-sm-8 text-center">
                 <h1 th:text="'Question ' + ${questionNr}" ></h1>
                 <p th:text="${question.question}"></p>
@@ -144,7 +144,7 @@
             $(group).prop("checked", false);
             $box.prop("checked", true);
         } else {
-            alert("test");
+            document.getElementById("emptyInput").checked = true;
             $box.prop("checked", false);
         }
     });
