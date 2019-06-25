@@ -1,9 +1,6 @@
 package ak.quiz.quiz.controller;
 
-import ak.quiz.quiz.model.Answer;
-import ak.quiz.quiz.model.Counter;
-import ak.quiz.quiz.model.Question;
-import ak.quiz.quiz.model.Score;
+import ak.quiz.quiz.model.*;
 import ak.quiz.quiz.repository.AnswerRepository;
 import ak.quiz.quiz.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +24,29 @@ public class MainController {
     @Autowired
     Score score;
 
+    private User user;
+
     private Counter counter;
 
-    public MainController(Counter counter) {
+    public MainController(Counter counter, User user) {
         this.counter = counter;
+        this.user = user;
     }
 
     @GetMapping("")
     public String home(ModelMap modelMap) {
+        return "start";
+    }
+
+    @GetMapping("/test")
+    public String test(ModelMap modelMap, @RequestParam String userName, @RequestParam String userEmail) {
         List<Question> questions = (List<Question>) questionRepository.findAll();
         if (counter.getCounter() < questions.size()) {
+            if (user.getName() == null){
+                user.setName(userName);
+                user.setEmail(userEmail);
+                System.out.println(user.getName());
+            }
             modelMap.put("questionNr", counter.getCounter() + 1);
             modelMap.put("question", questions.get(counter.getCounter()));
             Answer answer = answerRepository.getAnswerById((List<Answer>) answerRepository.findAll(), questions.get(counter.getCounter()).getAnswersId());
@@ -60,7 +70,7 @@ public class MainController {
 
     @PostMapping(path = "/")
     public String sendAnswer(@RequestParam String answer, @RequestParam int questionId, ModelMap modelMap) {
-        if (answer!=null) {
+        if (answer != null) {
             if (questionRepository.checkIfCorrectAnswer(questionRepository.findById(questionId), answer))
                 score.addPoint();
         }
@@ -79,4 +89,5 @@ public class MainController {
         questionRepository.save(new Question(question, answA, answerId));
         return "redirect:/";
     }
+
 }

@@ -79,40 +79,18 @@
             <p><a href="#">Link</a></p>
         </div>
 
-        <form action="/test" method="post">
-            <input type="checkbox" id="emptyInput" value="" style="visibility:hidden" class="radio" name="answer" checked/></label>
-            <div class="col-sm-8 text-center">
-                <h1 th:text="'Question ' + ${questionNr}" ></h1>
-                <p th:text="${question.question}"></p>
-                <input style="visibility: hidden" th:value="${question.id}" name="questionId"></input>
-                <hr>
-                <div class="col-sm-6 text-center">
-                    <label>
-                        <input th:text="${answer.answerA}" type="checkbox" class="radio" th:value="${answer.answerA}"
-                               name="answer"/></label>
-                    <hr>
-                </div>
-                <div class="col-sm-6 text-center">
-                    <label>
-                        <input th:text="${answer.answerB}" type="checkbox" class="radio" th:value="${answer.answerB}" name="answer"/></label>
-                    <hr>
-                </div>
-                <div class="col-sm-6 text-center">
-                    <label>
-                        <input th:text="${answer.answerC}" type="checkbox" class="radio" th:value="${answer.answerC}" name="answer"/></label>
-                    <hr>
-                </div>
-                <div class="col-sm-6 text-center">
-                    <label>
-                        <input th:text="${answer.answerD}" type="checkbox" class="radio" th:value="${answer.answerD}" name="answer"/></label>
-                    <hr>
-                </div>
-                <div class="col-sm-12 text-center">
-                    <button> Send answer</button>
-                    <hr>
-                </div>
-            </div>
-        </form>
+        <div class="col-sm-8 text-center">
+            <hr>
+
+            <form action="/test">
+                <h1>Podaj swoje imię:</h1>
+                <input type="text" id="userName" name="userName" required/>
+                <h1>Podaj swój email:</h1>
+                <input type="text" id="userEmail" name="userEmail" required/>
+                <br>
+                <button type="submit">Start test</button>
+            </form>
+        </div>
         <div class="col-sm-2 sidenav">
             <div class="well">
                 <p>ADS</p>
@@ -144,7 +122,6 @@
             $(group).prop("checked", false);
             $box.prop("checked", true);
         } else {
-            document.getElementById("emptyInput").checked = true;
             $box.prop("checked", false);
         }
     });
