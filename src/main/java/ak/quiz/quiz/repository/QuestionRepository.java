@@ -8,9 +8,7 @@ import java.util.Optional;
 
 public interface QuestionRepository extends CrudRepository<Question, Integer> {
 
-
     default boolean checkIfCorrectAnswer(Optional<Question> question, String answer){
-        System.out.println(question.toString());
         if (question.get().getCorrectAnswer().equals(answer)) return true;
         return false;
     }
