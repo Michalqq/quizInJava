@@ -16,6 +16,8 @@ public class User {
     @Email
     private String email;
 
+    private String answers;
+
     public String getName() {
         return name;
     }
@@ -30,5 +32,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(String answers) {
+        this.answers = answers;
     }
 }

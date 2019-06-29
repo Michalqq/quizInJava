@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Bootstrap Example</title>
+    <title>Quiz</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -79,7 +79,7 @@
             <p><a href="#">Link</a></p>
         </div>
 
-        <form action="/test" method="post">
+        <form action="/sendAnswer">
             <input type="checkbox" id="emptyInput" value="" style="visibility:hidden" class="radio" name="answer" checked/></label>
             <div class="col-sm-8 text-center">
                 <h1 th:text="'Question ' + ${questionNr}" ></h1>
