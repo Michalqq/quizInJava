@@ -26,7 +26,12 @@ public class MainController {
     @Autowired
     Score score;
 
+<<<<<<< HEAD
     private EmailSender emailSender;
+=======
+    @Autowired
+    EmailSender emailSender;
+>>>>>>> b10208bc0e25c2d2c6a2fc0aeef93c4618cb1d5e
 
     private User user;
 
