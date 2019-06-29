@@ -70,7 +70,9 @@ public class MainController {
             System.out.println(user.getAnswers());
             counter.setCounter(0);
             score.setPoint(0);
-            emailSender.sendEmail(user.getEmail(), "From Quiz", "Błędne odpowiedzi to: " + user.getAnswers().replaceAll("//","<br>"));
+            if (emailSender.sendEmail(user.getEmail(), "From Quiz", "Błędne odpowiedzi to: " + user.getAnswers().replaceAll("//","<br>")) == true){
+            modelMap.put("emailResult", "Na Twój email została wysłana wiadomość w których dowiesz się które odpowiedzi były błędne");
+            }
             return "result";
         }
         return "home";

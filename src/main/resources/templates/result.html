@@ -81,6 +81,7 @@
         <div class="col-sm-8 text-center">
             <h1>Twój wynik</h1>
             <p th:text="${score} + ' / ' + ${questionCount}"></p>
+            <p th:text="${emailResult}"></p>
             <hr>
             <form action="/">
                 <button type="submit">Again</button>
