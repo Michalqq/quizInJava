@@ -26,16 +26,16 @@ public class MainController {
     @Autowired
     Score score;
 
-    @Autowired
-    EmailSender emailSender;
+    private EmailSender emailSender;
 
     private User user;
 
     private Counter counter;
 
-    public MainController(Counter counter, User user) {
+    public MainController(Counter counter, User user, EmailSender emailSender) {
         this.counter = counter;
         this.user = user;
+        this.emailSender = emailSender;
     }
 
     @GetMapping("")
@@ -70,7 +70,7 @@ public class MainController {
             System.out.println(user.getAnswers());
             counter.setCounter(0);
             score.setPoint(0);
-            emailSender.sendEmail(user.getEmail(), "From Quiz", user.getAnswers());
+            emailSender.sendEmail(user.getEmail(), "From Quiz", "Błędne odpowiedzi to: " + user.getAnswers().replaceAll("//","<br>"));
             return "result";
         }
         return "home";
