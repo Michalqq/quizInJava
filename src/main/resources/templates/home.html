@@ -8,8 +8,9 @@
     <link rel="stylesheet" type="text/css" href="main.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="timer.js"></script>
 </head>
-<body>
+<body onload="timer(30)">
 
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
@@ -44,8 +45,9 @@
             <input type="checkbox" id="emptyInput" value="" style="visibility:hidden" class="radio" name="answer"
                    checked/></label>
             <div class="col-sm-8 text-center">
-                <h1 th:text="'Question ' + ${questionNr}"></h1>
-                <p th:text="${question.question}"></p>
+                <h4 th:text="'Question ' + ${questionNr}"></h4>
+                <h1 th:text="${question.question}"></h1>
+                <h4 id="time">Pozostały czas: 30s </h4>
                 <input style="visibility: hidden" th:value="${question.id}" name="questionId"></input>
                 <hr>
                 <div class="col-sm-6 text-center">
@@ -73,7 +75,7 @@
                     <hr>
                 </div>
                 <div class="col-sm-12 text-center">
-                    <button> Send answer</button>
+                    <button id="sendAnswer"> Send answer</button>
                     <hr>
                 </div>
             </div>

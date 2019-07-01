@@ -23,17 +23,15 @@ public class MainController {
     @Autowired
     AnswerRepository answerRepository;
 
-    @Autowired
-    Score score;
 
     private EmailSender emailSender;
 
     private User user;
 
-    private Counter counter;
+    private Score score;
 
-    public MainController(Counter counter, User user, EmailSender emailSender) {
-        this.counter = counter;
+    public MainController(Score score, User user, EmailSender emailSender) {
+        this.score = score;
         this.user = user;
         this.emailSender = emailSender;
     }
@@ -57,10 +55,10 @@ public class MainController {
     @GetMapping("/test")
     public String test(ModelMap modelMap) {
         List<Question> questions = (List<Question>) questionRepository.findAll();
-        if (counter.getCounter() < questions.size()) {
-            modelMap.put("questionNr", counter.getCounter() + 1);
-            modelMap.put("question", questions.get(counter.getCounter()));
-            Answer myAnswer = answerRepository.getAnswerById((List<Answer>) answerRepository.findAll(), questions.get(counter.getCounter()).getAnswersId());
+        if (score.getCounter() < questions.size()) {
+            modelMap.put("questionNr", score.getCounter() + 1);
+            modelMap.put("question", questions.get(score.getCounter()));
+            Answer myAnswer = answerRepository.getAnswerById((List<Answer>) answerRepository.findAll(), questions.get(score.getCounter()).getAnswersId());
             myAnswer.randomize();
             modelMap.put("answer", myAnswer);
             modelMap.put("score", score.getPoint());
@@ -68,10 +66,10 @@ public class MainController {
             modelMap.put("score", score.getPoint());
             modelMap.put("questionCount", questions.size());
             System.out.println(user.getAnswers());
-            counter.setCounter(0);
+            score.setCounter(0);
             score.setPoint(0);
             if (emailSender.sendEmail(user.getEmail(), "From Quiz", "Błędne odpowiedzi to: " + user.getAnswers().replaceAll("//","<br>")) == true){
-                modelMap.put("emailResult", "Na Twój email została wysłana wiadomość w których dowiesz się które odpowiedzi były błędne");
+                modelMap.put("emailResult", "Na Twój email została wysłana wiadomość w której dowiesz się które odpowiedzi były błędne");
             }
             return "result";
         }
@@ -92,7 +90,7 @@ public class MainController {
                 user.setAnswers(user.getAnswers() + "//" + questionRepository.findById(questionId).get().getQuestion());
             }
         }
-        counter.addCounter();
+        score.addCounter();
         return "redirect:/";
     }
 
