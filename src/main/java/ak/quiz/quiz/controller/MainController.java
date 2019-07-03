@@ -85,11 +85,6 @@ public class MainController {
         return "result";
     }
 
-    @GetMapping("/add")
-    public String add(ModelMap modelMap) {
-        return "add";
-    }
-
     @PostMapping(path = "/")
     public String sendAnswer(@RequestParam String answer, @RequestParam int questionId) {
         if (answer != null) {
@@ -103,16 +98,6 @@ public class MainController {
         return "redirect:/";
     }
 
-    @PostMapping(path = "/add") // Map ONLY GET Requests
-    public String addNewQuestion(@RequestParam String question
-            , @RequestParam String answA
-            , @RequestParam String answB
-            , @RequestParam String answC
-            , @RequestParam String answD, ModelMap modelMap) {
-        answerRepository.save(new Answer(answA, answB, answC, answD));
-        int answerId = answerRepository.getLastId((List<Answer>) answerRepository.findAll());
-        questionRepository.save(new Question(question, answA, answerId));
-        return "redirect:/";
-    }
+
 
 }

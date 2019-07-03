@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>Quiz</title>
     <meta charset="utf-8">
@@ -38,26 +38,29 @@
     <form action="/add" method="post">
         <div class="form-group">
             <label for="question">Question:</label>
-            <input type="text" class="form-control" id="question" name="question">
+            <input type="text" class="form-control" id="question" name="question" required>
         </div>
         <div class="form-group">
-            <label for="answA">Answer A: <-  True answer</label>
-            <input type="text" class="form-control" id="answA" name="answA" style="background-color: limegreen">
+            <label for="answA">Answer A: <- True answer</label>
+            <input type="text" class="form-control" id="answA" name="answA" style="background-color: limegreen" required>
         </div>
         <div class="form-group">
             <label for="answB">Answer B:</label>
-            <input type="text" class="form-control" id="answB" name="answB">
+            <input type="text" class="form-control" id="answB" name="answB" required>
         </div>
         <div class="form-group">
             <label for="answC">Answer C:</label>
-            <input type="text" class="form-control" id="answC" name="answC">
+            <input type="text" class="form-control" id="answC" name="answC" required>
         </div>
         <div class="form-group">
             <label for="answD">Answer D:</label>
-            <input type="text" class="form-control" id="answD" name="answD">
+            <input type="text" class="form-control" id="answD" name="answD" required>
         </div>
         <div class="form-group">
             <button>Save</button>
+            <div th:if="${succesfulAdded}">
+                <h7 th:text="${succesfulAdded}"/>
+            </div>
         </div>
     </form>
 </div>
