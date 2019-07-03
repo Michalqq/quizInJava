@@ -1,6 +1,8 @@
 package ak.quiz.quiz.controller;
 
 import ak.quiz.quiz.model.*;
+import ak.quiz.quiz.model.Randomize.Randomizable;
+import ak.quiz.quiz.model.Randomize.Randomize;
 import ak.quiz.quiz.repository.AnswerRepository;
 import ak.quiz.quiz.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,24 +58,31 @@ public class MainController {
     public String test(ModelMap modelMap) {
         List<Question> questions = (List<Question>) questionRepository.findAll();
         if (score.getCounter() < questions.size()) {
-            modelMap.put("questionNr", score.getCounter() + 1);
-            modelMap.put("question", questions.get(score.getCounter()));
-            Answer myAnswer = answerRepository.getAnswerById((List<Answer>) answerRepository.findAll(), questions.get(score.getCounter()).getAnswersId());
-            myAnswer.randomize();
-            modelMap.put("answer", myAnswer);
-            modelMap.put("score", score.getPoint());
+            getHome(questions, modelMap);
         } else {
-            modelMap.put("score", score.getPoint());
-            modelMap.put("questionCount", questions.size());
-            System.out.println(user.getAnswers());
-            score.setCounter(0);
-            score.setPoint(0);
-            if (emailSender.sendEmail(user.getEmail(), "From Quiz", "Błędne odpowiedzi to: " + user.getAnswers().replaceAll("//","<br>")) == true){
-                modelMap.put("emailResult", "Na Twój email została wysłana wiadomość w której dowiesz się które odpowiedzi były błędne");
-            }
-            return "result";
+            getResult(questions, modelMap);
         }
         return "home";
+    }
+    public String getHome(List<Question> questions, ModelMap modelMap){
+        modelMap.put("questionNr", score.getCounter() + 1);
+        modelMap.put("question", questions.get(score.getCounter()));
+        Answer myAnswer = answerRepository.getAnswerById((List<Answer>) answerRepository.findAll(), questions.get(score.getCounter()).getAnswersId());
+        Randomizable randomize = new Randomize();
+        myAnswer = randomize.randomize(myAnswer);
+        modelMap.put("answer", myAnswer);
+        modelMap.put("score", score.getPoint());
+        return "home";
+    }
+    public String getResult(List<Question> questions, ModelMap modelMap){
+        modelMap.put("score", score.getPoint());
+        modelMap.put("questionCount", questions.size());
+        score.setCounter(0);
+        score.setPoint(0);
+        if (emailSender.sendEmail(user.getEmail(), "From Quiz", "Błędne odpowiedzi to: " + user.getAnswers().replaceAll("//","<br>")) == true){
+            modelMap.put("emailResult", "Na Twój email została wysłana wiadomość w której dowiesz się które odpowiedzi były błędne");
+        }
+        return "result";
     }
 
     @GetMapping("/add")
