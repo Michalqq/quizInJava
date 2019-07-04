@@ -5,6 +5,7 @@ import ak.quiz.quiz.model.Randomize.Randomizable;
 import ak.quiz.quiz.model.Randomize.Randomize;
 import ak.quiz.quiz.repository.AnswerRepository;
 import ak.quiz.quiz.repository.QuestionRepository;
+import ak.quiz.quiz.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.jws.WebParam;
+import javax.jws.soap.SOAPBinding;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +29,8 @@ public class MainController {
     @Autowired
     AnswerRepository answerRepository;
 
+    @Autowired
+    UsersRepository usersRepository;
 
     private EmailSender emailSender;
 
@@ -40,20 +46,24 @@ public class MainController {
 
     @GetMapping("")
     public String home(ModelMap modelMap) {
+        modelMap.put("users", usersRepository.findAll());
         return "start";
     }
+
     @GetMapping("/start")
-    public String start(ModelMap modelMap, @RequestParam String userName, @RequestParam String userEmail){
+    public String start(ModelMap modelMap, @RequestParam String userName, @RequestParam String userEmail) {
         user.setName(userName);
         user.setEmail(userEmail);
         user.setAnswers("");
         return "redirect:/test";
     }
+
     @GetMapping("/sendAnswer")
-    public String sendAnswer(ModelMap modelMap, @RequestParam int questionId, @RequestParam String answer){
+    public String sendAnswer(ModelMap modelMap, @RequestParam int questionId, @RequestParam String answer) {
         sendAnswer(answer, questionId);
         return "redirect:/test";
     }
+
     @GetMapping("/test")
     public String test(ModelMap modelMap) {
         List<Question> questions = (List<Question>) questionRepository.findAll();
@@ -65,7 +75,9 @@ public class MainController {
         }
         return "home";
     }
-    public String getHome(List<Question> questions, ModelMap modelMap){
+
+    public String getHome(List<Question> questions, ModelMap modelMap) {
+        modelMap.put("users", usersRepository.findAll());
         modelMap.put("questionNr", score.getCounter() + 1);
         modelMap.put("question", questions.get(score.getCounter()));
         Answer myAnswer = answerRepository.getAnswerById((List<Answer>) answerRepository.findAll(), questions.get(score.getCounter()).getAnswersId());
@@ -75,14 +87,28 @@ public class MainController {
         modelMap.put("score", score.getPoint());
         return "home";
     }
-    public void getResult(List<Question> questions, ModelMap modelMap){
+
+    public void getResult(List<Question> questions, ModelMap modelMap) {
         modelMap.put("score", score.getPoint());
         modelMap.put("questionCount", questions.size());
-        score.setCounter(0);
-        score.setPoint(0);
-        if (emailSender.sendEmail(user.getEmail(), "From Quiz", "Błędne odpowiedzi to: " + user.getAnswers().replaceAll("//","<br>")) == true){
+        double percentageScore = ((double) score.getPoint() / questions.size())*100;
+        UserEntity userEntity = new UserEntity();
+        userEntity.setScorePercentage(percentageScore);
+        userEntity.setScore(score.getPoint() + "/" + questions.size());
+        saveUser(userEntity);
+        if (emailSender.sendEmail(user.getEmail(), "From Quiz", "Błędne odpowiedzi to: " + user.getAnswers().replaceAll("//", "<br>")) == true) {
             modelMap.put("emailResult", "Na Twój email została wysłana wiadomość w której dowiesz się które odpowiedzi były błędne");
         }
+    }
+
+    private void saveUser(UserEntity userEntity) {
+        userEntity.setDate(Date.valueOf(LocalDate.now()));
+        userEntity.setName(user.getName());
+        userEntity.setEmail(user.getEmail());
+        usersRepository.save(userEntity);
+        userEntity=null;
+        score.setCounter(0);
+        score.setPoint(0);
     }
 
     @PostMapping(path = "/")
@@ -97,7 +123,6 @@ public class MainController {
         score.addCounter();
         return "redirect:/";
     }
-
 
 
 }
