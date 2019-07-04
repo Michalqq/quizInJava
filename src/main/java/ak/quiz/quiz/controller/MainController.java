@@ -61,6 +61,7 @@ public class MainController {
             getHome(questions, modelMap);
         } else {
             getResult(questions, modelMap);
+            return "result";
         }
         return "home";
     }
@@ -74,7 +75,7 @@ public class MainController {
         modelMap.put("score", score.getPoint());
         return "home";
     }
-    public String getResult(List<Question> questions, ModelMap modelMap){
+    public void getResult(List<Question> questions, ModelMap modelMap){
         modelMap.put("score", score.getPoint());
         modelMap.put("questionCount", questions.size());
         score.setCounter(0);
@@ -82,7 +83,6 @@ public class MainController {
         if (emailSender.sendEmail(user.getEmail(), "From Quiz", "Błędne odpowiedzi to: " + user.getAnswers().replaceAll("//","<br>")) == true){
             modelMap.put("emailResult", "Na Twój email została wysłana wiadomość w której dowiesz się które odpowiedzi były błędne");
         }
-        return "result";
     }
 
     @PostMapping(path = "/")
