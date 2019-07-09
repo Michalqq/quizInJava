@@ -71,7 +71,7 @@ public class MainController {
             counter.setCounter(0);
             score.setPoint(0);
             if (emailSender.sendEmail(user.getEmail(), "From Quiz", "Błędne odpowiedzi to: " + user.getAnswers().replaceAll("//","<br>")) == true){
-                modelMap.put("emailResult", "Na Twój email została wysłana wiadomość w których dowiesz się które odpowiedzi były błędne");
+                modelMap.put("emailResult", "Na Twój email została wysłana wiadomość w której dowiesz się które odpowiedzi były błędne");
             }
             return "result";
         }
