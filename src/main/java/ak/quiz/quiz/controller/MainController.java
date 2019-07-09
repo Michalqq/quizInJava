@@ -1,8 +1,11 @@
 package ak.quiz.quiz.controller;
 
 import ak.quiz.quiz.model.*;
+import ak.quiz.quiz.model.Randomize.Randomizable;
+import ak.quiz.quiz.model.Randomize.Randomize;
 import ak.quiz.quiz.repository.AnswerRepository;
 import ak.quiz.quiz.repository.QuestionRepository;
+import ak.quiz.quiz.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.jws.WebParam;
+import javax.jws.soap.SOAPBinding;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,63 +30,85 @@ public class MainController {
     AnswerRepository answerRepository;
 
     @Autowired
-    Score score;
+    UsersRepository usersRepository;
 
     private EmailSender emailSender;
 
     private User user;
 
-    private Counter counter;
+    private Score score;
 
-    public MainController(Counter counter, User user, EmailSender emailSender) {
-        this.counter = counter;
+    public MainController(Score score, User user, EmailSender emailSender) {
+        this.score = score;
         this.user = user;
         this.emailSender = emailSender;
     }
 
     @GetMapping("")
     public String home(ModelMap modelMap) {
+        modelMap.put("users", usersRepository.findAll());
         return "start";
     }
+
     @GetMapping("/start")
-    public String start(ModelMap modelMap, @RequestParam String userName, @RequestParam String userEmail){
+    public String start(ModelMap modelMap, @RequestParam String userName, @RequestParam String userEmail) {
         user.setName(userName);
         user.setEmail(userEmail);
         user.setAnswers("");
         return "redirect:/test";
     }
+
     @GetMapping("/sendAnswer")
-    public String sendAnswer(ModelMap modelMap, @RequestParam int questionId, @RequestParam String answer){
+    public String sendAnswer(ModelMap modelMap, @RequestParam int questionId, @RequestParam String answer) {
         sendAnswer(answer, questionId);
         return "redirect:/test";
     }
+
     @GetMapping("/test")
     public String test(ModelMap modelMap) {
         List<Question> questions = (List<Question>) questionRepository.findAll();
-        if (counter.getCounter() < questions.size()) {
-            modelMap.put("questionNr", counter.getCounter() + 1);
-            modelMap.put("question", questions.get(counter.getCounter()));
-            Answer myAnswer = answerRepository.getAnswerById((List<Answer>) answerRepository.findAll(), questions.get(counter.getCounter()).getAnswersId());
-            myAnswer.randomize();
-            modelMap.put("answer", myAnswer);
-            modelMap.put("score", score.getPoint());
+        if (score.getCounter() < questions.size()) {
+            getHome(questions, modelMap);
         } else {
-            modelMap.put("score", score.getPoint());
-            modelMap.put("questionCount", questions.size());
-            System.out.println(user.getAnswers());
-            counter.setCounter(0);
-            score.setPoint(0);
-            if (emailSender.sendEmail(user.getEmail(), "From Quiz", "Błędne odpowiedzi to: " + user.getAnswers().replaceAll("//","<br>")) == true){
-                modelMap.put("emailResult", "Na Twój email została wysłana wiadomość w której dowiesz się które odpowiedzi były błędne");
-            }
+            getResult(questions, modelMap);
             return "result";
         }
         return "home";
     }
 
-    @GetMapping("/add")
-    public String add(ModelMap modelMap) {
-        return "add";
+    public String getHome(List<Question> questions, ModelMap modelMap) {
+        modelMap.put("users", usersRepository.findAll());
+        modelMap.put("questionNr", score.getCounter() + 1);
+        modelMap.put("question", questions.get(score.getCounter()));
+        Answer myAnswer = answerRepository.getAnswerById((List<Answer>) answerRepository.findAll(), questions.get(score.getCounter()).getAnswersId());
+        Randomizable randomize = new Randomize();
+        myAnswer = randomize.randomize(myAnswer);
+        modelMap.put("answer", myAnswer);
+        modelMap.put("score", score.getPoint());
+        return "home";
+    }
+
+    public void getResult(List<Question> questions, ModelMap modelMap) {
+        modelMap.put("score", score.getPoint());
+        modelMap.put("questionCount", questions.size());
+        double percentageScore = ((double) score.getPoint() / questions.size())*100;
+        UserEntity userEntity = new UserEntity();
+        userEntity.setScorePercentage(percentageScore);
+        userEntity.setScore(score.getPoint() + "/" + questions.size());
+        saveUser(userEntity);
+        if (emailSender.sendEmail(user.getEmail(), "From Quiz", "Błędne odpowiedzi to: " + user.getAnswers().replaceAll("//", "<br>")) == true) {
+            modelMap.put("emailResult", "Na Twój email została wysłana wiadomość w której dowiesz się które odpowiedzi były błędne");
+        }
+    }
+
+    private void saveUser(UserEntity userEntity) {
+        userEntity.setDate(Date.valueOf(LocalDate.now()));
+        userEntity.setName(user.getName());
+        userEntity.setEmail(user.getEmail());
+        usersRepository.save(userEntity);
+        userEntity=null;
+        score.setCounter(0);
+        score.setPoint(0);
     }
 
     @PostMapping(path = "/")
@@ -92,20 +120,9 @@ public class MainController {
                 user.setAnswers(user.getAnswers() + "//" + questionRepository.findById(questionId).get().getQuestion());
             }
         }
-        counter.addCounter();
+        score.addCounter();
         return "redirect:/";
     }
 
-    @PostMapping(path = "/add") // Map ONLY GET Requests
-    public String addNewQuestion(@RequestParam String question
-            , @RequestParam String answA
-            , @RequestParam String answB
-            , @RequestParam String answC
-            , @RequestParam String answD, ModelMap modelMap) {
-        answerRepository.save(new Answer(answA, answB, answC, answD));
-        int answerId = answerRepository.getLastId((List<Answer>) answerRepository.findAll());
-        questionRepository.save(new Question(question, answA, answerId));
-        return "redirect:/";
-    }
 
 }

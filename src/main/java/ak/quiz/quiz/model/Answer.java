@@ -73,26 +73,26 @@ public class Answer {
     public void setAnswerD(String answerD) {
         this.answerD = answerD;
     }
-
-    public void randomize() {
-        List<String> answers = new ArrayList<>();
-        answers.add(answerA);
-        answers.add(answerB);
-        answers.add(answerC);
-        answers.add(answerD);
-        int random = new Random().nextInt(answers.size());
-        this.setAnswerA(answers.get(random));
-        answers.remove(random);
-        random = new Random().nextInt(answers.size());
-        this.setAnswerB(answers.get(random));
-        answers.remove(random);
-        random = new Random().nextInt(answers.size());
-        this.setAnswerC(answers.get(random));
-        answers.remove(random);
-        random = new Random().nextInt(answers.size());
-        this.setAnswerD(answers.get(random));
-        answers.remove(random);
-    }
+//
+//    public void randomize() {
+//        List<String> answers = new ArrayList<>();
+//        answers.add(answerA);
+//        answers.add(answerB);
+//        answers.add(answerC);
+//        answers.add(answerD);
+//        int random = new Random().nextInt(answers.size());
+//        this.setAnswerA(answers.get(random));
+//        answers.remove(random);
+//        random = new Random().nextInt(answers.size());
+//        this.setAnswerB(answers.get(random));
+//        answers.remove(random);
+//        random = new Random().nextInt(answers.size());
+//        this.setAnswerC(answers.get(random));
+//        answers.remove(random);
+//        random = new Random().nextInt(answers.size());
+//        this.setAnswerD(answers.get(random));
+//        answers.remove(random);
+//    }
 
     @Override
     public String toString() {
