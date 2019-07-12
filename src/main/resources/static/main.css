@@ -43,11 +43,11 @@ table {
 td, th {
   border: 1px solid #000000;
   text-align: left;
-  padding: 8px;
+  padding: 2px;
 }
 
 tr:nth-child(even) {
-  background-color: #dddddd;
+  background-color: #c6c6c6;
 }
 
 .radio{
