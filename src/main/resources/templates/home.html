@@ -51,29 +51,34 @@
                 <input style="visibility: hidden" th:value="${question.id}" name="questionId"></input>
                 <hr>
                 <div class="col-sm-6 text-center">
-                    <label>
-                        <input th:text="${answer.answerA}" type="checkbox" class="radio" th:value="${answer.answerA}"
+                    <label class="answersClass">
+                        <input th:text="${answer.answerA}" type="checkbox" class="radio"
+                               th:value="${answer.answerA}"
                                name="answer"/></label>
                     <hr>
                 </div>
                 <div class="col-sm-6 text-center">
-                    <label>
-                        <input th:text="${answer.answerB}" type="checkbox" class="radio" th:value="${answer.answerB}"
+                    <label class="answersClass">
+                        <input th:text="${answer.answerB}" type="checkbox" class="radio"
+                               th:value="${answer.answerB}"
                                name="answer"/></label>
                     <hr>
                 </div>
                 <div class="col-sm-6 text-center">
-                    <label>
-                        <input th:text="${answer.answerC}" type="checkbox" class="radio" th:value="${answer.answerC}"
+                    <label class="answersClass">
+                        <input th:text="${answer.answerC}" type="checkbox" class="radio"
+                               th:value="${answer.answerC}"
                                name="answer"/></label>
                     <hr>
                 </div>
                 <div class="col-sm-6 text-center">
-                    <label>
-                        <input th:text="${answer.answerD}" type="checkbox" class="radio" th:value="${answer.answerD}"
+                    <label class="answersClass">
+                        <input th:text="${answer.answerD}" type="checkbox" class="radio"
+                               th:value="${answer.answerD}"
                                name="answer"/></label>
                     <hr>
                 </div>
+
                 <div class="col-sm-12 text-center">
                     <button id="sendAnswer"> Send answer</button>
                     <hr>
@@ -124,4 +129,18 @@
             $box.prop("checked", false);
         }
     });
+
+    $('.radio-group .radio').click(function(){
+        $(this).parent().find('.radio').removeClass('selected');
+        $(this).addClass('selected');
+        var val = $(this).attr('data-value');
+        alert(val);
+        $(this).parent().find('input').val(val);
+});
+
+
+
+
+
+
 </script>

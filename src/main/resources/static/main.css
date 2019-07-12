@@ -49,3 +49,16 @@ td, th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+
+.radio{
+    display:inline-block;
+    width:55px;
+    height: 55px;
+}
+
+.radio.selected{
+    border-color: blue;
+}
+.answersClass{
+    font-size: 35px;
+}
