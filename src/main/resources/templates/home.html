@@ -53,8 +53,7 @@
                 <div class="col-sm-6 text-center">
                     <label class="answersClass">
                         <input th:text="${answer.answerA}" type="checkbox" class="radio"
-                               th:value="${answer.answerA}"
-                               name="answer"/></label>
+                               th:value="${answer.answerA}"/> </label>
                     <hr>
                 </div>
                 <div class="col-sm-6 text-center">
@@ -129,18 +128,6 @@
             $box.prop("checked", false);
         }
     });
-
-    $('.radio-group .radio').click(function(){
-        $(this).parent().find('.radio').removeClass('selected');
-        $(this).addClass('selected');
-        var val = $(this).attr('data-value');
-        alert(val);
-        $(this).parent().find('input').val(val);
-});
-
-
-
-
 
 
 </script>

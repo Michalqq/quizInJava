@@ -12,15 +12,15 @@
 /* Set gray background color and 100% height */
 .sidenav {
     padding-top: 20px;
-    background-color: #f1f1f1;
+    background-color: #ceffad;
     height: 100%;
 }
 
 /* Set black background color, white text and some padding */
 footer {
-    background-color: #555;
+    background-color: #000000;
     color: white;
-    padding: 15px;
+    padding: 25px;
 }
 
 /* On small screens, set height to 'auto' for sidenav and grid */
@@ -41,7 +41,7 @@ table {
 }
 
 td, th {
-  border: 1px solid #dddddd;
+  border: 1px solid #000000;
   text-align: left;
   padding: 8px;
 }
@@ -56,9 +56,7 @@ tr:nth-child(even) {
     height: 55px;
 }
 
-.radio.selected{
-    border-color: blue;
-}
 .answersClass{
     font-size: 35px;
+
 }
