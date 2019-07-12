@@ -12,7 +12,7 @@
 /* Set gray background color and 100% height */
 .sidenav {
     padding-top: 20px;
-    background-color: #ceffad;
+    background-color: #cfcfcf;
     height: 100%;
 }
 
@@ -41,7 +41,7 @@ table {
 }
 
 td, th {
-  border: 1px solid #000000;
+  border: 1px solid #cfcfcf;
   text-align: left;
   padding: 2px;
 }
@@ -59,4 +59,5 @@ tr:nth-child(even) {
 .answersClass{
     font-size: 35px;
 
+  background-color: #dbf0da;
 }

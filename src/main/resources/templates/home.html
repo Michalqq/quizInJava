@@ -51,9 +51,10 @@
                 <input style="visibility: hidden" th:value="${question.id}" name="questionId"></input>
                 <hr>
                 <div class="col-sm-6 text-center">
-                    <label class="answersClass">
-                        <input th:text="${answer.answerA}" type="checkbox" class="radio"
-                               th:value="${answer.answerA}"/> </label>
+
+                    <label>
+                        <input th:text="${answer.answerA}" type="checkbox" class="radio" th:value="${answer.answerA}"
+                               name="answer"/></label>
                     <hr>
                 </div>
                 <div class="col-sm-6 text-center">
@@ -86,7 +87,6 @@
         </form>
         <div class="col-sm-3 sidenav">
             <h3>History: </h3>
-
             <div class="well" style="overflow-y:scroll; height:300px">
 
                 <table>
@@ -131,6 +131,7 @@
             $box.prop("checked", false);
         }
     });
+
 
 
 
